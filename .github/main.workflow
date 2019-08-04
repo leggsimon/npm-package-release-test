@@ -14,6 +14,14 @@ workflow "Release" {
   ]
 }
 
+workflow "Test PRs" {
+  on       = "pull_request"
+
+  resolves = [
+    "npm test"
+  ]
+}
+
 action "npm ci" {
   uses = "docker://node:alpine"
   runs = "npm"
