@@ -1,17 +1,17 @@
 workflow "Test on push" {
   on = "push"
-  resolves = ["docker://node:alpine-1"]
+  resolves = ["Run tests"]
 }
 
-action "docker://node:alpine" {
+action "Install dependencies" {
   uses = "docker://node:alpine"
   runs = "npm"
   args = "ci"
 }
 
-action "docker://node:alpine-1" {
+action "Run tests" {
   uses = "docker://node:alpine"
-  needs = ["docker://node:alpine"]
+  needs = ["Install dependencies"]
   runs = "npm"
   args = "test"
 }
