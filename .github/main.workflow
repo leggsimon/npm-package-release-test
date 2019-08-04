@@ -1,34 +1,28 @@
 workflow "Test on push" {
   on = "push"
-  resolves = ["Run tests"]
-}
-
-action "Install dependencies" {
-  uses = "docker://node:alpine"
-  runs = "npm"
-  args = "ci"
-}
-
-action "Run tests" {
-  uses = "docker://node:alpine"
-  needs = ["Install dependencies"]
-  runs = "npm"
-  args = "test"
+  resolves = ["npm test"]
 }
 
 workflow "Release" {
   on = "release"
-  resolves = ["log envs"]
+  resolves = ["ENV"]
 }
 
-action "Install deps" {
+action "npm ci" {
   uses = "docker://node:alpine"
   runs = "npm"
   args = "ci"
 }
 
-action "log envs" {
+action "npm test" {
+  uses = "docker://node:alpine"
+  needs = ["npm ci"]
+  runs = "npm"
+  args = "test"
+}
+
+action "ENV" {
   uses = "docker://node:alpine"
   runs = "ENV"
-  needs = ["Install deps"]
+  needs = ["npm ci"]
 }
