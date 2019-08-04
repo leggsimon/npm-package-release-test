@@ -15,3 +15,20 @@ action "Run tests" {
   runs = "npm"
   args = "test"
 }
+
+workflow "Release" {
+  on = "release"
+  resolves = ["log envs"]
+}
+
+action "Install deps" {
+  uses = "docker://node:alpine"
+  runs = "npm"
+  args = "ci"
+}
+
+action "log envs" {
+  uses = "docker://node:alpine"
+  runs = "ENV"
+  needs = ["Install deps"]
+}
